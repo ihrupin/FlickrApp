@@ -1,13 +1,13 @@
 package com.hrupin.flickrapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
 import com.gmail.yuyang226.flickr.oauth.OAuth;
 import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.gmail.yuyang226.flickr.people.User;
 import com.hrupin.flickrapp.development.Logger;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 
 public class UserPreferences {
     private static final String TAG = UserPreferences.class.getSimpleName();

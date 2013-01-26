@@ -16,9 +16,8 @@ import com.gmail.yuyang226.flickr.auth.Permission;
 import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.hrupin.flickrapp.FlickrHelper;
 import com.hrupin.flickrapp.UserPreferences;
+import com.hrupin.flickrapp.activities.LoginActivity;
 import com.hrupin.flickrapp.development.Logger;
-import com.hrupin.flickrapp.ui.activities.FlickrAppActivity;
-import com.hrupin.flickrapp.ui.activities.LoginActivity;
 
 public class OAuthTask extends AsyncTask<Void, Integer, String> {
 

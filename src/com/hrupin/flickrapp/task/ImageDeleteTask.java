@@ -1,27 +1,12 @@
 package com.hrupin.flickrapp.task;
 
-import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.Set;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.widget.GridView;
-import android.widget.ImageView;
 
 import com.gmail.yuyang226.flickr.Flickr;
 import com.gmail.yuyang226.flickr.oauth.OAuth;
 import com.gmail.yuyang226.flickr.oauth.OAuthToken;
-import com.gmail.yuyang226.flickr.people.User;
-import com.gmail.yuyang226.flickr.photos.PhotoList;
 import com.hrupin.flickrapp.FlickrHelper;
 import com.hrupin.flickrapp.development.Logger;
-import com.hrupin.flickrapp.images.ImageCache;
-import com.hrupin.flickrapp.images.ImageUtils;
-import com.hrupin.flickrapp.images.ImageUtils.DownloadedDrawable;
-import com.hrupin.flickrapp.task.LoadPhotostreamTask.LoadListener;
 
 public class ImageDeleteTask extends AsyncTask<OAuth, Void, Boolean> {
 

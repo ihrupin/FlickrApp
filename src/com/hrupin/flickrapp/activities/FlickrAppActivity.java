@@ -1,4 +1,4 @@
-package com.hrupin.flickrapp.ui.activities;
+package com.hrupin.flickrapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;

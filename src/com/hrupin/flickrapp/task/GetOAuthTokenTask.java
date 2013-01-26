@@ -9,7 +9,7 @@ import com.gmail.yuyang226.flickr.Flickr;
 import com.gmail.yuyang226.flickr.oauth.OAuth;
 import com.gmail.yuyang226.flickr.oauth.OAuthInterface;
 import com.hrupin.flickrapp.FlickrHelper;
-import com.hrupin.flickrapp.ui.activities.LoginActivity;
+import com.hrupin.flickrapp.activities.LoginActivity;
 
 public class GetOAuthTokenTask extends AsyncTask<String, Integer, OAuth> {
     private static final Logger logger = LoggerFactory.getLogger(GetOAuthTokenTask.class);
