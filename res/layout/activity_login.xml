@@ -2,25 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
+    android:background="@color/white"
     android:gravity="center"
-    android:background="@color/white" >
+    android:orientation="vertical" >
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:text="@string/hello"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        android:text="@string/hello" />
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/buttonSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
-        android:textStyle="bold"
-        android:text="@string/sign_in" />
+        android:text="@string/sign_in"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </LinearLayout>
