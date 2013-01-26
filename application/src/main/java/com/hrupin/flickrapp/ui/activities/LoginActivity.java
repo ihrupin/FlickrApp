@@ -23,6 +23,7 @@ import com.hrupin.flickrapp.task.OAuthTask;
 public class LoginActivity extends Activity implements OnClickListener {
 
     public static final String CALLBACK_SCHEME = "com-hrupin-flickrapp-oauth";
+    private static final String TAG = LoginActivity.class.getSimpleName();
     private Button buttonSignIn;
 
     /** Called when the activity is first created. */
@@ -41,15 +42,20 @@ public class LoginActivity extends Activity implements OnClickListener {
         Intent intent = getIntent();
         String scheme = intent.getScheme();
         OAuth savedToken = UserPreferences.getOAuthToken();
+        Logger.d(TAG, "savedToken: " + savedToken);
+        if (savedToken != null) {
+            Logger.d(TAG, "User: " + savedToken.getUser());
+        }
+        Logger.d(TAG, "SCHEMA: " + scheme);
         if (CALLBACK_SCHEME.equals(scheme) && (savedToken == null || savedToken.getUser() == null)) {
             Uri uri = intent.getData();
             String query = uri.getQuery();
-            Logger.d("Returned Query: {}", query);
+            Logger.d(TAG, "Returned Query: {}", query);
             String[] data = query.split("&");
             if (data != null && data.length == 2) {
                 String oauthToken = data[0].substring(data[0].indexOf("=") + 1);
                 String oauthVerifier = data[1].substring(data[1].indexOf("=") + 1);
-                Logger.d("OAuth Token: {}; OAuth Verifier: {}", oauthToken, oauthVerifier);
+                Logger.d(TAG, "OAuth Token: {}; OAuth Verifier: {}", oauthToken, oauthVerifier);
 
                 OAuth oauth = UserPreferences.getOAuthToken();
                 if (oauth != null && oauth.getToken() != null && oauth.getToken().getOauthTokenSecret() != null) {
