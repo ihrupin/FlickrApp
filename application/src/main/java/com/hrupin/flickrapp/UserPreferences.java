@@ -18,10 +18,19 @@ public class UserPreferences {
     public static final String KEY_USER_NAME = "key_user_name";
     public static final String KEY_USER_ID = "key_user_id";
 
-    private static SharedPreferences settings;
+    private static SharedPreferences settings = null;
 
     public static void init(Context context) {
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Logger.i(TAG, "###################### PREFS ####################");
+        Logger.i(TAG, getDumpSharedPrefs());
+        Logger.i(TAG, "###################### /PREFS ####################");
+    }
+    
+
+    private static String getDumpSharedPrefs() {
+        String str = settings.getAll().toString();
+        return str;
     }
 
     public static boolean isLogedIn() {
@@ -36,6 +45,7 @@ public class UserPreferences {
     }
 
     public static void saveOAuthToken(String userName, String userId, String token, String tokenSecret) {
+        Logger.d(TAG, "Saving userName=%s, userId=%s, oauth token={}, and token secret={}", userName, userId, token, tokenSecret); //$NON-NLS-1$
         Editor editor = settings.edit();
         editor.putString(KEY_OAUTH_TOKEN, token);
         editor.putString(KEY_TOKEN_SECRET, tokenSecret);

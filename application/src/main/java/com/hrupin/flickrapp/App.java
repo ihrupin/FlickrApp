@@ -2,6 +2,8 @@ package com.hrupin.flickrapp;
 
 import android.app.Application;
 
+import com.hrupin.flickrapp.development.Logger;
+
 public class App extends Application {
 
     private static final String TAG = App.class.getSimpleName();
@@ -11,4 +13,5 @@ public class App extends Application {
         super.onCreate();
         UserPreferences.init(getApplicationContext());
     }
+
 }

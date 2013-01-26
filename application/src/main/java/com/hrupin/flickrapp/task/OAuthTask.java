@@ -31,7 +31,7 @@ import com.hrupin.flickrapp.ui.activities.LoginActivity;
  */
 public class OAuthTask extends AsyncTask<Void, Integer, String> {
 
-    private static final Uri OAUTH_CALLBACK_URI = Uri.parse(FlickrAppActivity.CALLBACK_SCHEME + "://oauth"); //$NON-NLS-1$
+    private static final Uri OAUTH_CALLBACK_URI = Uri.parse(LoginActivity.CALLBACK_SCHEME + "://oauth"); //$NON-NLS-1$
 
     private static final String TAG = OAuthTask.class.getSimpleName();
 

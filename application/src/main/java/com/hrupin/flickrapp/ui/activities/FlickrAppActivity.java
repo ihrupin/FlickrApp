@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 public class FlickrAppActivity extends Activity {
-    public static final String CALLBACK_SCHEME = "flickr_app_oauth";
 
     /** Called when the activity is first created. */
     @Override
@@ -36,20 +35,20 @@ public class FlickrAppActivity extends Activity {
             User user = oAuth.getUser();
             OAuthToken token = oAuth.getToken();
             if (user == null || user.getId() == null || token == null || token.getOauthToken() == null || token.getOauthTokenSecret() == null) {
-                Toast.makeText(this, "Authorization failed", Toast.LENGTH_LONG).show();
+                pleaseLoginFirst();
                 return;
             }
-            String message = String.format(Locale.US, "Authorization Succeed: user=%s, userId=%s, oauthToken=%s, tokenSecret=%s", //$NON-NLS-1$
-                    user.getUsername(), user.getId(), token.getOauthToken(), token.getOauthTokenSecret());
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            UserPreferences.saveOAuthToken(user.getUsername(), user.getId(), token.getOauthToken(), token.getOauthTokenSecret());
             load(oAuth);
         } else {
-            Toast.makeText(this, "Please, login first", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            pleaseLoginFirst();
         }
+    }
+
+    private void pleaseLoginFirst() {
+        Toast.makeText(this, "Please, login first", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void load(OAuth oauth) {

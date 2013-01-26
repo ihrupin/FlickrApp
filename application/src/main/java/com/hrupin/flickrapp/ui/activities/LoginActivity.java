@@ -1,7 +1,10 @@
 package com.hrupin.flickrapp.ui.activities;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,11 +12,17 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.gmail.yuyang226.flickr.oauth.OAuth;
+import com.gmail.yuyang226.flickr.oauth.OAuthToken;
+import com.gmail.yuyang226.flickr.people.User;
 import com.hrupin.flickrapp.R;
 import com.hrupin.flickrapp.UserPreferences;
+import com.hrupin.flickrapp.development.Logger;
+import com.hrupin.flickrapp.task.GetOAuthTokenTask;
 import com.hrupin.flickrapp.task.OAuthTask;
 
 public class LoginActivity extends Activity implements OnClickListener {
+
+    public static final String CALLBACK_SCHEME = "com-hrupin-flickrapp-oauth";
     private Button buttonSignIn;
 
     /** Called when the activity is first created. */
@@ -29,8 +38,27 @@ public class LoginActivity extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if (UserPreferences.isLogedIn()) {
-            openApp();
+        Intent intent = getIntent();
+        String scheme = intent.getScheme();
+        OAuth savedToken = UserPreferences.getOAuthToken();
+        if (CALLBACK_SCHEME.equals(scheme) && (savedToken == null || savedToken.getUser() == null)) {
+            Uri uri = intent.getData();
+            String query = uri.getQuery();
+            Logger.d("Returned Query: {}", query);
+            String[] data = query.split("&");
+            if (data != null && data.length == 2) {
+                String oauthToken = data[0].substring(data[0].indexOf("=") + 1);
+                String oauthVerifier = data[1].substring(data[1].indexOf("=") + 1);
+                Logger.d("OAuth Token: {}; OAuth Verifier: {}", oauthToken, oauthVerifier);
+
+                OAuth oauth = UserPreferences.getOAuthToken();
+                if (oauth != null && oauth.getToken() != null && oauth.getToken().getOauthTokenSecret() != null) {
+                    GetOAuthTokenTask task = new GetOAuthTokenTask(this);
+                    task.execute(oauthToken, oauth.getToken().getOauthTokenSecret(), oauthVerifier);
+                }
+            }
+        } else {
+//            openApp();
         }
     }
 
@@ -44,6 +72,16 @@ public class LoginActivity extends Activity implements OnClickListener {
         if (result == null) {
             Toast.makeText(this, "Authorization failed", Toast.LENGTH_LONG).show();
         } else {
+            User user = result.getUser();
+            OAuthToken token = result.getToken();
+            if (user == null || user.getId() == null || token == null || token.getOauthToken() == null || token.getOauthTokenSecret() == null) {
+                Toast.makeText(this, "Authorization failed", Toast.LENGTH_LONG).show();
+                return;
+            }
+            String message = String.format(Locale.US, "Authorization Succeed: user=%s, userId=%s, oauthToken=%s, tokenSecret=%s", //$NON-NLS-1$
+                    user.getUsername(), user.getId(), token.getOauthToken(), token.getOauthTokenSecret());
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            UserPreferences.saveOAuthToken(user.getUsername(), user.getId(), token.getOauthToken(), token.getOauthTokenSecret());
             openApp();
         }
     }
