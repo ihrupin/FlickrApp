@@ -68,10 +68,12 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
             GeoData geoData = photo.getGeoData();
             if (geoData != null) {
+                Logger.i(TAG, "geoDate != null" + ", LAT:" + geoData.getLatitude() + ", LNG:" + geoData.getLongitude());
                 imageButtonShowOnMap.setVisibility(View.VISIBLE);
                 imageButtonShowOnMap.setTag(geoData);
             } else {
                 imageButtonShowOnMap.setVisibility(View.GONE);
+                Logger.i(TAG, "geoDate == null");
             }
         } else {
             enableFullscreenMode(false);
