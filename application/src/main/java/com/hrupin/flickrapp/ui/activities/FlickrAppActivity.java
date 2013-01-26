@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +33,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
     private static final String TAG = FlickrAppActivity.class.getSimpleName();
     private GridView gridView;
-    private LinearLayout linearLayoutFullScreenImageWrapper;
+    private FrameLayout frameLayoutFullScreenImageWrapper;
     private ImageView imageViewFullScreen;
 
     /** Called when the activity is first created. */
@@ -42,7 +43,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         setContentView(R.layout.main);
 
         gridView = (GridView) findViewById(R.id.gridViewThumbs);
-        linearLayoutFullScreenImageWrapper = (LinearLayout) findViewById(R.id.linearLayoutFullScreenImageWrapper);
+        frameLayoutFullScreenImageWrapper = (FrameLayout) findViewById(R.id.frameLayoutFullScreenImageWrapper);
         imageViewFullScreen = (ImageView) findViewById(R.id.imageViewFullScreen);
         imageViewFullScreen.setOnClickListener(this);
     }
@@ -54,7 +55,6 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             Drawable drawable = new DownloadedDrawable(task);
             imageViewFullScreen.setImageDrawable(drawable);
             task.execute(photo.getLargeUrl());
-
         } else {
             enableFullscreenMode(false);
             imageViewFullScreen.setImageDrawable(null);
@@ -63,11 +63,13 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
     private void enableFullscreenMode(boolean isEnable) {
         if (isEnable) {
-            linearLayoutFullScreenImageWrapper.setVisibility(View.VISIBLE);
+            frameLayoutFullScreenImageWrapper.setVisibility(View.VISIBLE);
             gridView.setEnabled(false);
+            imageViewFullScreen.setClickable(true);
         } else {
-            linearLayoutFullScreenImageWrapper.setVisibility(View.GONE);
+            frameLayoutFullScreenImageWrapper.setVisibility(View.GONE);
             gridView.setEnabled(true);
+            imageViewFullScreen.setClickable(false);
         }
     }
 
@@ -108,7 +110,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
     private void load(OAuth oauth) {
         if (oauth != null) {
-            openPhotoInFullScreen(null);
+            enableFullscreenMode(false);
             new LoadPhotostreamTask(this, gridView, new LoadListenerImpl()).execute(oauth);
         }
     }
@@ -128,13 +130,13 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         Photo photo = (Photo) arg1.getTag();
         Logger.i(TAG, "PHOTO:::" + photo.getLargeUrl());
-        enableFullscreenMode(false);
+        openPhotoInFullScreen(photo);
     }
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            if(linearLayoutFullScreenImageWrapper.getVisibility() == View.VISIBLE){
+            if(frameLayoutFullScreenImageWrapper.getVisibility() == View.VISIBLE){
                 enableFullscreenMode(false);
                 return true;
             }
@@ -145,8 +147,8 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     @Override
     public void onClick(View v) {
         if (v.getId() == imageViewFullScreen.getId()) {
-            if (linearLayoutFullScreenImageWrapper.getVisibility() == View.VISIBLE) {
-                openPhotoInFullScreen(null);
+            if (frameLayoutFullScreenImageWrapper.getVisibility() == View.VISIBLE) {
+                enableFullscreenMode(false);
             }
         }
     }
