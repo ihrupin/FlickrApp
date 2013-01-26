@@ -14,8 +14,8 @@ public final class FlickrHelper {
 
     private static FlickrHelper instance = null;
 
-    private static final String API_KEY = "174b6cfbdaccf6886985c08527708d98"; //$NON-NLS-1$
-    public static final String API_SEC = "11df5e5bf032b557"; //$NON-NLS-1$
+    private static final String API_KEY = Config.FICKR_API_KEY;
+    public static final String API_SEC = Config.FICKR_API_SECRET;
 
     private FlickrHelper() {
 
