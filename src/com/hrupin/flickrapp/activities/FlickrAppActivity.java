@@ -1,6 +1,8 @@
 package com.hrupin.flickrapp.activities;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,6 +38,7 @@ import com.hrupin.flickrapp.task.LoadPhotostreamTask.LoadListener;
 public class FlickrAppActivity extends Activity implements OnItemClickListener, OnClickListener {
 
     private static final String TAG = FlickrAppActivity.class.getSimpleName();
+    private static final int DIALOG_WAIT = 0;
     private GridView gridView;
     private FrameLayout frameLayoutFullScreenImageWrapper;
     private ImageView imageViewFullScreen;
@@ -198,6 +201,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         }
         if (v.getId() == imageButtonDelete.getId()) {
             if (currentPhoto != null) {
+                showDialog(DIALOG_WAIT);
                 OAuth oAuth = UserPreferences.getOAuthToken();
                 if (oAuth != null) {
                     new ImageDeleteTask(currentPhoto.getId(), new DeleteListener() {
@@ -205,11 +209,22 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
                         public void onComplete() {
                             gridView.setAdapter(null);
                             successLoginFlow();
+                            dismissDialog(DIALOG_WAIT);
                         }
                     }).execute(oAuth);
                 }
             }
         }
 
+    }
+    
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if(id == DIALOG_WAIT){
+            ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setMessage("Please, wait");
+            return dialog;
+        }
+        return null;
     }
 }
