@@ -49,12 +49,12 @@ public class LoginActivity extends Activity implements OnClickListener {
         Intent intent = getIntent();
         String scheme = intent.getScheme();
         OAuth savedToken = UserPreferences.getOAuthToken();
-        Logger.d(TAG, "savedToken: " + savedToken);
-        if (savedToken != null) {
-            Logger.d(TAG, "User: " + savedToken.getUser());
+
+        if (!isNeedLogin(savedToken)) {
+            openApp();
         }
-        Logger.d(TAG, "SCHEMA: " + scheme);
-        if (CALLBACK_SCHEME.equals(scheme) && (savedToken == null || savedToken.getUser() == null)) {
+        
+        if (CALLBACK_SCHEME.equals(scheme) && isNeedLogin(savedToken)) {
             Uri uri = intent.getData();
             String query = uri.getQuery();
             Logger.d(TAG, "Returned Query: {}", query);
@@ -70,9 +70,11 @@ public class LoginActivity extends Activity implements OnClickListener {
                     task.execute(oauthToken, oauth.getToken().getOauthTokenSecret(), oauthVerifier);
                 }
             }
-        } else {
-            openApp();
-        }
+        } 
+    }
+
+    private boolean isNeedLogin(OAuth savedToken) {
+        return savedToken == null || savedToken.getUser() == null;
     }
 
     private void openApp() {
@@ -93,7 +95,8 @@ public class LoginActivity extends Activity implements OnClickListener {
             }
             String message = String.format(Locale.US, "Authorization Succeed: user=%s, userId=%s, oauthToken=%s, tokenSecret=%s", //$NON-NLS-1$
                     user.getUsername(), user.getId(), token.getOauthToken(), token.getOauthTokenSecret());
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            Logger.i(TAG, message);
+            Toast.makeText(this, "Authorization Succeed", Toast.LENGTH_LONG).show();
             UserPreferences.saveOAuthToken(user.getUsername(), user.getId(), token.getOauthToken(), token.getOauthTokenSecret());
             openApp();
         }
