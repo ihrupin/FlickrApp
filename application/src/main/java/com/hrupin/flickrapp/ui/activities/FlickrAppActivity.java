@@ -1,4 +1,6 @@
-package com.hrupin.sample.flickrapp;
+package com.hrupin.flickrapp.ui.activities;
+
+import com.hrupin.flickrapp.R;
 
 import android.app.Activity;
 import android.os.Bundle;
