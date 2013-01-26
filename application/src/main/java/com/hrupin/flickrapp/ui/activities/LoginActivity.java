@@ -22,7 +22,7 @@ import com.hrupin.flickrapp.task.OAuthTask;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
-    public static final String CALLBACK_SCHEME = "com-hrupin-flickrapp-oauth";
+    public static final String CALLBACK_SCHEME = "com-hrupin-flickrapp-oauth"; //$NON-NLS-1$
     private static final String TAG = LoginActivity.class.getSimpleName();
     private Button buttonSignIn;
 
@@ -34,6 +34,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
         buttonSignIn.setOnClickListener(this);
+    }
+    
+    @Override
+    protected void onNewIntent(Intent intent) {
+        //this is very important, otherwise you would get a null Scheme in the onResume later on.
+        setIntent(intent);
     }
 
     @Override
@@ -64,7 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                 }
             }
         } else {
-            // openApp();
+             openApp();
         }
     }
 
