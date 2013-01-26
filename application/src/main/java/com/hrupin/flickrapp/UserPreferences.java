@@ -26,7 +26,6 @@ public class UserPreferences {
         Logger.i(TAG, getDumpSharedPrefs());
         Logger.i(TAG, "###################### /PREFS ####################");
     }
-    
 
     private static String getDumpSharedPrefs() {
         String str = settings.getAll().toString();

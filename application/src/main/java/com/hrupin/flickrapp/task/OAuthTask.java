@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.hrupin.flickrapp.task;
 
 import java.net.URL;
@@ -23,12 +20,6 @@ import com.hrupin.flickrapp.development.Logger;
 import com.hrupin.flickrapp.ui.activities.FlickrAppActivity;
 import com.hrupin.flickrapp.ui.activities.LoginActivity;
 
-/**
- * Represents the task to start the oauth process.
- * 
- * @author yayu
- * 
- */
 public class OAuthTask extends AsyncTask<Void, Integer, String> {
 
     private static final Uri OAUTH_CALLBACK_URI = Uri.parse(LoginActivity.CALLBACK_SCHEME + "://oauth"); //$NON-NLS-1$

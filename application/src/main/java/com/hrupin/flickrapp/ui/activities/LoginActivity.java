@@ -58,7 +58,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                 }
             }
         } else {
-//            openApp();
+            // openApp();
         }
     }
 
