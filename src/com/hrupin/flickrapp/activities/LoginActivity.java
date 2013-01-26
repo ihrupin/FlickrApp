@@ -53,7 +53,7 @@ public class LoginActivity extends Activity implements OnClickListener {
         if (!isNeedLogin(savedToken)) {
             openApp();
         }
-        
+
         if (CALLBACK_SCHEME.equals(scheme) && isNeedLogin(savedToken)) {
             Uri uri = intent.getData();
             String query = uri.getQuery();
@@ -70,7 +70,7 @@ public class LoginActivity extends Activity implements OnClickListener {
                     task.execute(oauthToken, oauth.getToken().getOauthTokenSecret(), oauthVerifier);
                 }
             }
-        } 
+        }
     }
 
     private boolean isNeedLogin(OAuth savedToken) {

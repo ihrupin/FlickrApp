@@ -44,6 +44,7 @@ public class ImageDeleteTask extends AsyncTask<OAuth, Void, Boolean> {
         if (listener != null)
             listener.onComplete();
     }
+
     public static interface DeleteListener {
         void onComplete();
     }

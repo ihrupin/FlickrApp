@@ -46,13 +46,12 @@ public class LoadPhotostreamTask extends AsyncTask<OAuth, Void, PhotoList> {
      */
     @Override
     protected void onPostExecute(PhotoList result) {
-        if(listener != null)
-        if (result != null) {
-            listener.onComplete(result);
-        }
+        if (listener != null)
+            if (result != null) {
+                listener.onComplete(result);
+            }
     }
-    
-    
+
     public static interface LoadListener {
         void onComplete(PhotoList result);
     }

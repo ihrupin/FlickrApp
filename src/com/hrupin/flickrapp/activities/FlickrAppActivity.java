@@ -69,7 +69,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             Drawable drawable = new DownloadedDrawable(task);
             imageViewFullScreen.setImageDrawable(drawable);
             task.execute(photo.getLargeUrl());
-            
+
             if (photo.getGeoData() != null) {
                 GeoData geoData = photo.getGeoData();
                 Logger.i(TAG, "geoDate != null" + ", LAT:" + geoData.getLatitude() + ", LNG:" + geoData.getLongitude());
@@ -183,17 +183,17 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             }
         }
         if (v.getId() == imageButtonShowOnMap.getId()) {
-            if(currentPhoto != null){
+            if (currentPhoto != null) {
                 GeoData geoData = currentPhoto.getGeoData();
                 if (geoData != null) {
                     double latitude = geoData.getLatitude();
                     double longitude = geoData.getLongitude();
-                    String searchStr = "geo:0,0?q="+latitude+","+longitude+" ("+ currentPhoto.getTitle() +")";
+                    String searchStr = "geo:0,0?q=" + latitude + "," + longitude + " (" + currentPhoto.getTitle() + ")";
                     Logger.i(TAG, searchStr);
                     Uri uri = Uri.parse(searchStr);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
-                }                
+                }
             }
         }
         if (v.getId() == imageButtonDelete.getId()) {
