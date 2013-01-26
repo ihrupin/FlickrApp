@@ -1,8 +1,5 @@
 package com.hrupin.flickrapp.ui.activities;
 
-import java.util.Collection;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,14 +14,12 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.gmail.yuyang226.flickr.oauth.OAuth;
 import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.gmail.yuyang226.flickr.people.User;
 import com.gmail.yuyang226.flickr.photos.GeoData;
-import com.gmail.yuyang226.flickr.photos.Note;
 import com.gmail.yuyang226.flickr.photos.Photo;
 import com.gmail.yuyang226.flickr.photos.PhotoList;
 import com.hrupin.flickrapp.R;
@@ -32,6 +27,8 @@ import com.hrupin.flickrapp.UserPreferences;
 import com.hrupin.flickrapp.adapters.GridThumbsAdapter;
 import com.hrupin.flickrapp.development.Logger;
 import com.hrupin.flickrapp.images.ImageUtils.DownloadedDrawable;
+import com.hrupin.flickrapp.task.ImageDeleteTask;
+import com.hrupin.flickrapp.task.ImageDeleteTask.DeleteListener;
 import com.hrupin.flickrapp.task.ImageDownloadTask;
 import com.hrupin.flickrapp.task.LoadPhotostreamTask;
 import com.hrupin.flickrapp.task.LoadPhotostreamTask.LoadListener;
@@ -43,6 +40,8 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     private FrameLayout frameLayoutFullScreenImageWrapper;
     private ImageView imageViewFullScreen;
     private ImageButton imageButtonShowOnMap;
+    private ImageButton imageButtonDelete;
+    public GridThumbsAdapter adapter;
 
     /** Called when the activity is first created. */
     @Override
@@ -55,6 +54,8 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         imageViewFullScreen = (ImageView) findViewById(R.id.imageViewFullScreen);
         imageViewFullScreen.setOnClickListener(this);
         imageButtonShowOnMap = (ImageButton) findViewById(R.id.imageButtonShowOnMap);
+        imageButtonDelete = (ImageButton) findViewById(R.id.imageButtonDelete);
+        imageButtonDelete.setOnClickListener(this);
         enableFullscreenMode(false);
     }
 
@@ -66,8 +67,8 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             imageViewFullScreen.setImageDrawable(drawable);
             task.execute(photo.getLargeUrl());
 
-            GeoData geoData = photo.getGeoData();
-            if (geoData != null) {
+            if (photo.hasGeoData()) {
+                GeoData geoData = photo.getGeoData();
                 Logger.i(TAG, "geoDate != null" + ", LAT:" + geoData.getLatitude() + ", LNG:" + geoData.getLongitude());
                 imageButtonShowOnMap.setVisibility(View.VISIBLE);
                 imageButtonShowOnMap.setTag(geoData);
@@ -75,6 +76,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
                 imageButtonShowOnMap.setVisibility(View.GONE);
                 Logger.i(TAG, "geoDate == null");
             }
+            imageButtonDelete.setTag(photo);
         } else {
             enableFullscreenMode(false);
             imageViewFullScreen.setImageDrawable(null);
@@ -88,11 +90,13 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             gridView.setEnabled(false);
             imageViewFullScreen.setClickable(true);
             imageButtonShowOnMap.setVisibility(View.VISIBLE);
+            imageButtonDelete.setVisibility(View.VISIBLE);
         } else {
             frameLayoutFullScreenImageWrapper.setVisibility(View.GONE);
             gridView.setEnabled(true);
             imageViewFullScreen.setClickable(false);
             imageButtonShowOnMap.setVisibility(View.GONE);
+            imageButtonDelete.setVisibility(View.GONE);
         }
     }
 
@@ -142,7 +146,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
         @Override
         public void onComplete(PhotoList result) {
-            GridThumbsAdapter adapter = new GridThumbsAdapter(FlickrAppActivity.this, result);
+            adapter = new GridThumbsAdapter(FlickrAppActivity.this, result);
             gridView.setAdapter(adapter);
             gridView.setOnItemClickListener(FlickrAppActivity.this);
         }
@@ -179,6 +183,21 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             if (geoData != null) {
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + geoData.getLatitude() + "," + geoData.getLatitude()));
                 startActivity(intent);
+            }
+        }
+        if (v.getId() == imageButtonDelete.getId()) {
+            Photo photo = (Photo) imageButtonDelete.getTag();
+            if (photo != null) {
+                OAuth oAuth = UserPreferences.getOAuthToken();
+                if (oAuth != null) {
+                    new ImageDeleteTask(photo.getId(), new DeleteListener() {
+                        @Override
+                        public void onComplete() {
+                            gridView.setAdapter(null);
+                            successLoginFlow();
+                        }
+                    }).execute(oAuth);
+                }
             }
         }
 

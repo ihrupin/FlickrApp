@@ -36,6 +36,8 @@ public class LoadPhotostreamTask extends AsyncTask<OAuth, Void, PhotoList> {
         extras.add("url_sq"); //$NON-NLS-1$
         extras.add("url_l"); //$NON-NLS-1$
         extras.add("views"); //$NON-NLS-1$
+        extras.add("geo"); //$NON-NLS-1$
+        extras.add("geo"); //$NON-NLS-1$
         User user = arg0[0].getUser();
         try {
             return f.getPeopleInterface().getPhotos(user.getId(), extras, 20, 1);
