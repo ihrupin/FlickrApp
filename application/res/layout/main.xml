@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="3" 
-        android:padding="5dp"
-        android:horizontalSpacing="7dp"
-        android:verticalSpacing="7dp">
+        android:padding="@dimen/gridCellSpacingAndPadding"
+        android:horizontalSpacing="@dimen/gridCellSpacingAndPadding"
+        android:verticalSpacing="@dimen/gridCellSpacingAndPadding">
     </GridView>
     
 </LinearLayout>
