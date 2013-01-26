@@ -1,8 +1,12 @@
 package com.hrupin.flickrapp.ui.activities;
 
+import java.util.Collection;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -18,6 +23,8 @@ import android.widget.Toast;
 import com.gmail.yuyang226.flickr.oauth.OAuth;
 import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.gmail.yuyang226.flickr.people.User;
+import com.gmail.yuyang226.flickr.photos.GeoData;
+import com.gmail.yuyang226.flickr.photos.Note;
 import com.gmail.yuyang226.flickr.photos.Photo;
 import com.gmail.yuyang226.flickr.photos.PhotoList;
 import com.hrupin.flickrapp.R;
@@ -35,6 +42,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     private GridView gridView;
     private FrameLayout frameLayoutFullScreenImageWrapper;
     private ImageView imageViewFullScreen;
+    private ImageButton imageButtonShowOnMap;
 
     /** Called when the activity is first created. */
     @Override
@@ -46,6 +54,8 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         frameLayoutFullScreenImageWrapper = (FrameLayout) findViewById(R.id.frameLayoutFullScreenImageWrapper);
         imageViewFullScreen = (ImageView) findViewById(R.id.imageViewFullScreen);
         imageViewFullScreen.setOnClickListener(this);
+        imageButtonShowOnMap = (ImageButton) findViewById(R.id.imageButtonShowOnMap);
+        enableFullscreenMode(false);
     }
 
     private void openPhotoInFullScreen(Photo photo) {
@@ -55,10 +65,19 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             Drawable drawable = new DownloadedDrawable(task);
             imageViewFullScreen.setImageDrawable(drawable);
             task.execute(photo.getLargeUrl());
+
+            GeoData geoData = photo.getGeoData();
+            if (geoData != null) {
+                imageButtonShowOnMap.setVisibility(View.VISIBLE);
+                imageButtonShowOnMap.setTag(geoData);
+            } else {
+                imageButtonShowOnMap.setVisibility(View.GONE);
+            }
         } else {
             enableFullscreenMode(false);
             imageViewFullScreen.setImageDrawable(null);
         }
+
     }
 
     private void enableFullscreenMode(boolean isEnable) {
@@ -66,10 +85,12 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             frameLayoutFullScreenImageWrapper.setVisibility(View.VISIBLE);
             gridView.setEnabled(false);
             imageViewFullScreen.setClickable(true);
+            imageButtonShowOnMap.setVisibility(View.VISIBLE);
         } else {
             frameLayoutFullScreenImageWrapper.setVisibility(View.GONE);
             gridView.setEnabled(true);
             imageViewFullScreen.setClickable(false);
+            imageButtonShowOnMap.setVisibility(View.GONE);
         }
     }
 
@@ -132,11 +153,11 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         Logger.i(TAG, "PHOTO:::" + photo.getLargeUrl());
         openPhotoInFullScreen(photo);
     }
-    
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            if(frameLayoutFullScreenImageWrapper.getVisibility() == View.VISIBLE){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (frameLayoutFullScreenImageWrapper.getVisibility() == View.VISIBLE) {
                 enableFullscreenMode(false);
                 return true;
             }
@@ -151,5 +172,13 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
                 enableFullscreenMode(false);
             }
         }
+        if (v.getId() == imageButtonShowOnMap.getId()) {
+            GeoData geoData = (GeoData) imageButtonShowOnMap.getTag();
+            if (geoData != null) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + geoData.getLatitude() + "," + geoData.getLatitude()));
+                startActivity(intent);
+            }
+        }
+
     }
 }
