@@ -3,9 +3,7 @@ package com.hrupin.flickrapp.task;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.widget.GridView;
 
 import com.gmail.yuyang226.flickr.Flickr;
 import com.gmail.yuyang226.flickr.oauth.OAuth;
@@ -13,18 +11,12 @@ import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.gmail.yuyang226.flickr.people.User;
 import com.gmail.yuyang226.flickr.photos.PhotoList;
 import com.hrupin.flickrapp.FlickrHelper;
-import com.hrupin.flickrapp.adapters.GridThumbsAdapter;
-import com.hrupin.flickrapp.task.LoadPhotostreamTask.LoadListener;
 
 public class LoadPhotostreamTask extends AsyncTask<OAuth, Void, PhotoList> {
 
-    private Activity activity;
-    private GridView gridView;
     private LoadListener listener;
 
-    public LoadPhotostreamTask(Activity activity, GridView gridView, LoadListener listener) {
-        this.activity = activity;
-        this.gridView = gridView;
+    public LoadPhotostreamTask(LoadListener listener) {
         this.listener = listener;
     }
 
@@ -36,7 +28,6 @@ public class LoadPhotostreamTask extends AsyncTask<OAuth, Void, PhotoList> {
         extras.add("url_sq"); //$NON-NLS-1$
         extras.add("url_l"); //$NON-NLS-1$
         extras.add("views"); //$NON-NLS-1$
-        extras.add("geo"); //$NON-NLS-1$
         extras.add("geo"); //$NON-NLS-1$
         User user = arg0[0].getUser();
         try {

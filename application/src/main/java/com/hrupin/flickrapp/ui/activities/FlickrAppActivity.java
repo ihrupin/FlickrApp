@@ -42,6 +42,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     private ImageButton imageButtonShowOnMap;
     private ImageButton imageButtonDelete;
     public GridThumbsAdapter adapter;
+    private Photo currentPhoto;
 
     /** Called when the activity is first created. */
     @Override
@@ -54,6 +55,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         imageViewFullScreen = (ImageView) findViewById(R.id.imageViewFullScreen);
         imageViewFullScreen.setOnClickListener(this);
         imageButtonShowOnMap = (ImageButton) findViewById(R.id.imageButtonShowOnMap);
+        imageButtonShowOnMap.setOnClickListener(this);
         imageButtonDelete = (ImageButton) findViewById(R.id.imageButtonDelete);
         imageButtonDelete.setOnClickListener(this);
         enableFullscreenMode(false);
@@ -61,23 +63,25 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
     private void openPhotoInFullScreen(Photo photo) {
         if (photo != null) {
+            this.currentPhoto = photo;
             enableFullscreenMode(true);
             ImageDownloadTask task = new ImageDownloadTask(imageViewFullScreen);
             Drawable drawable = new DownloadedDrawable(task);
             imageViewFullScreen.setImageDrawable(drawable);
             task.execute(photo.getLargeUrl());
-
-            if (photo.hasGeoData()) {
+            
+            if (photo.getGeoData() != null) {
                 GeoData geoData = photo.getGeoData();
                 Logger.i(TAG, "geoDate != null" + ", LAT:" + geoData.getLatitude() + ", LNG:" + geoData.getLongitude());
                 imageButtonShowOnMap.setVisibility(View.VISIBLE);
-                imageButtonShowOnMap.setTag(geoData);
+
             } else {
                 imageButtonShowOnMap.setVisibility(View.GONE);
                 Logger.i(TAG, "geoDate == null");
             }
             imageButtonDelete.setTag(photo);
         } else {
+            this.currentPhoto = null;
             enableFullscreenMode(false);
             imageViewFullScreen.setImageDrawable(null);
         }
@@ -138,7 +142,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     private void load(OAuth oauth) {
         if (oauth != null) {
             enableFullscreenMode(false);
-            new LoadPhotostreamTask(this, gridView, new LoadListenerImpl()).execute(oauth);
+            new LoadPhotostreamTask(new LoadListenerImpl()).execute(oauth);
         }
     }
 
@@ -179,18 +183,24 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             }
         }
         if (v.getId() == imageButtonShowOnMap.getId()) {
-            GeoData geoData = (GeoData) imageButtonShowOnMap.getTag();
-            if (geoData != null) {
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + geoData.getLatitude() + "," + geoData.getLatitude()));
-                startActivity(intent);
+            if(currentPhoto != null){
+                GeoData geoData = currentPhoto.getGeoData();
+                if (geoData != null) {
+                    double latitude = geoData.getLatitude();
+                    double longitude = geoData.getLongitude();
+                    String searchStr = "geo:0,0?q="+latitude+","+longitude+" ("+ currentPhoto.getTitle() +")";
+                    Logger.i(TAG, searchStr);
+                    Uri uri = Uri.parse(searchStr);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }                
             }
         }
         if (v.getId() == imageButtonDelete.getId()) {
-            Photo photo = (Photo) imageButtonDelete.getTag();
-            if (photo != null) {
+            if (currentPhoto != null) {
                 OAuth oAuth = UserPreferences.getOAuthToken();
                 if (oAuth != null) {
-                    new ImageDeleteTask(photo.getId(), new DeleteListener() {
+                    new ImageDeleteTask(currentPhoto.getId(), new DeleteListener() {
                         @Override
                         public void onComplete() {
                             gridView.setAdapter(null);
