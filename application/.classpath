@@ -9,5 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="src" output="bin/classes" path="src/main/java"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/igor/projects/weddingsnap.com/android/application/libs/flickrj-android-1.0.3.20120619135416.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

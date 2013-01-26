@@ -46,8 +46,7 @@
             android:value="AIzaSyDgbH8P5a_DsGszw7A4V3RlOy_cc-TX19I" />
 
         <activity
-            android:name="com.hrupin.ui.activities.FlickrAppActivity"
-            android:launchMode="singleInstance"
+            android:name="com.hrupin.flickrapp.ui.activities.LoginActivity"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" >
@@ -56,6 +55,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.hrupin.flickrapp.ui.activities.FlickrAppActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         
     </application>

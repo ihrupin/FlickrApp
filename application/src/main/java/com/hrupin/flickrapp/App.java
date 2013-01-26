@@ -1,4 +1,5 @@
 package com.hrupin.flickrapp;
+
 import android.app.Application;
 
 public class App extends Application {
@@ -8,6 +9,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        
+        UserPreferences.init(getApplicationContext());
     }
 }
