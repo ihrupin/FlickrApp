@@ -66,6 +66,7 @@ public class GridThumbsAdapter extends BaseAdapter {
             task.execute(photo.getSmallSquareUrl());
         }
         vi.setLayoutParams(new GridView.LayoutParams(thumbHeight, thumbHeight));
+        vi.setTag(photo);
         return vi;
     }
 

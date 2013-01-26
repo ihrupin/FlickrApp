@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
     <GridView
         android:id="@+id/gridViewThumbs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="3" 
-        android:padding="@dimen/gridCellSpacingAndPadding"
         android:horizontalSpacing="@dimen/gridCellSpacingAndPadding"
-        android:verticalSpacing="@dimen/gridCellSpacingAndPadding">
+        android:numColumns="3"
+        android:padding="@dimen/gridCellSpacingAndPadding"
+        android:verticalSpacing="@dimen/gridCellSpacingAndPadding" >
     </GridView>
-    
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutFullScreenImageWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" 
+        android:background="@color/black">
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewFullScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside" />
+
+</FrameLayout>
