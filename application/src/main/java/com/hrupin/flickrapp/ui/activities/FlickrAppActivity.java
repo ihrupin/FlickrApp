@@ -1,25 +1,29 @@
 package com.hrupin.flickrapp.ui.activities;
 
-import java.util.Locale;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.GridView;
+import android.widget.Toast;
 
 import com.gmail.yuyang226.flickr.oauth.OAuth;
 import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.gmail.yuyang226.flickr.people.User;
 import com.hrupin.flickrapp.R;
 import com.hrupin.flickrapp.UserPreferences;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.Toast;
+import com.hrupin.flickrapp.task.LoadPhotostreamTask;
 
 public class FlickrAppActivity extends Activity {
+
+    private GridView gridView;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        gridView = (GridView)findViewById(R.id.gridViewThumbs);
     }
 
     @Override
@@ -27,6 +31,12 @@ public class FlickrAppActivity extends Activity {
         super.onResume();
 
         successLoginFlow();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        gridView.setAdapter(null);
     }
 
     private void successLoginFlow() {
@@ -53,9 +63,7 @@ public class FlickrAppActivity extends Activity {
 
     private void load(OAuth oauth) {
         if (oauth != null) {
-            // new LoadUserTask(this, userIcon).execute(oauth);
-            // new LoadPhotostreamTask(this, listView).execute(oauth);
-            Toast.makeText(this, "OK", Toast.LENGTH_LONG).show();
+            new LoadPhotostreamTask(this, gridView).execute(oauth);
         }
     }
 }
