@@ -69,9 +69,4 @@ public class GridThumbsAdapter extends BaseAdapter {
         vi.setTag(photo);
         return vi;
     }
-
-    private float dpToPixels(Context context, int dpValue) {
-        Resources r = context.getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
-    }
 }
