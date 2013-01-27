@@ -11,13 +11,18 @@ public class Config {
     public static final boolean IS_UNDER_DEVELOPMENT = true;
     private static final String PHOTOS = "photos";
 
-    public static File getStoragePath(Context context, String fileName) {
-        File file = null;
+    public static File getFilePathOnExternalStorage(Context context, String fileName) {
+        File root = null;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            file = new File(context.getExternalFilesDir(null), fileName);
+            root = new File(context.getExternalFilesDir(null), PHOTOS);
         } else {
-            file = new File(context.getDir(PHOTOS, Context.MODE_PRIVATE), fileName);
+            root = new File(context.getDir(PHOTOS, Context.MODE_PRIVATE), PHOTOS);
         }
-        return file;
+        if(root != null){
+            root.mkdirs();
+        }
+        String mFilePath = root.getPath() + "/" + fileName;
+        File f = new File(mFilePath);
+        return f;
     }
 }

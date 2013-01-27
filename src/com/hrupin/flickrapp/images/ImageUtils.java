@@ -32,20 +32,21 @@ public final class ImageUtils {
     public static Bitmap downloadImage(Context context, String url) {
         Bitmap bitmap = downloadImageFromExternalStorage(context, url);
         if (bitmap == null) {
-            bitmap = downloadImageFromWeb(url);
+            bitmap = downloadImageFromWeb(context, url);
         }
         return bitmap;
     }
     
 
-    private static void saveImageToExternalStorage(final Bitmap bitmap, final String url) {
+    private static void saveImageToExternalStorage(final Context context, final Bitmap bitmap, final String url) {
         new Thread(new Runnable() {
             
             @Override
             public void run() {
                 String fileName = prepareFileName(url);
                 try{
-                    FileOutputStream stream = new FileOutputStream(fileName);
+                    File file = Config.getFilePathOnExternalStorage(context, fileName);
+                    FileOutputStream stream = new FileOutputStream(file);
                     bitmap.compress(CompressFormat.JPEG, 100, stream);
                     stream.flush();
                     stream.close();
@@ -61,7 +62,7 @@ public final class ImageUtils {
 
     public static Bitmap downloadImageFromExternalStorage(Context context, String url) {
         String fileName = prepareFileName(url);
-        File file = Config.getStoragePath(context, fileName);
+        File file = Config.getFilePathOnExternalStorage(context, fileName);
         InputStream inputStream = null;
         try {
             if (file.exists()) {
@@ -84,7 +85,7 @@ public final class ImageUtils {
         return fileName;
     }
 
-    public static Bitmap downloadImageFromWeb(String url) {
+    public static Bitmap downloadImageFromWeb(Context context, String url) {
         // final int IO_BUFFER_SIZE = 4 * 1024;
 
         // AndroidHttpClient is not allowed to be used from the main thread
@@ -108,7 +109,7 @@ public final class ImageUtils {
                     // Bug on slow connections, fixed in future release.
                     Logger.i(TAG, "##IMAGE FROM WEB: " + url);
                     Bitmap bitmat = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
-                    saveImageToExternalStorage(bitmat, url);
+                    saveImageToExternalStorage(context, bitmat, url);
                     return bitmat;
                 } finally {
                     if (inputStream != null) {
