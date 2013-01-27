@@ -55,7 +55,7 @@ public class GridThumbsAdapter extends BaseAdapter {
         ImageView image = (ImageView) vi.findViewById(R.id.imageViewThumb);
         Photo photo = photos.get(position);
         if (image != null) {
-            ImageDownloadTask task = new ImageDownloadTask(image);
+            ImageDownloadTask task = new ImageDownloadTask(activity, image);
             Drawable drawable = new DownloadedDrawable(task);
             image.setImageDrawable(drawable);
             task.execute(photo.getSmallSquareUrl());

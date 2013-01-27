@@ -2,6 +2,7 @@ package com.hrupin.flickrapp.task;
 
 import java.lang.ref.WeakReference;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -14,9 +15,11 @@ import com.hrupin.flickrapp.images.ImageUtils.DownloadedDrawable;
 public class ImageDownloadTask extends AsyncTask<String, Integer, Bitmap> {
     private WeakReference<ImageView> imgRef = null;
     private String mUrl;
+    private Context context;
 
-    public ImageDownloadTask(ImageView imageView) {
+    public ImageDownloadTask(Context context, ImageView imageView) {
         this.imgRef = new WeakReference<ImageView>(imageView);
+        this.context = context;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, Bitmap> {
         if (image != null) {
             return image;
         }
-        return ImageUtils.downloadImage(mUrl);
+        return ImageUtils.downloadImage(context, mUrl);
     }
 
     @Override

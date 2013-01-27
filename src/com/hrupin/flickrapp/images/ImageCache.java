@@ -36,12 +36,12 @@ public final class ImageCache {
         super();
     }
 
-    public static Bitmap getFromCache(String id) {
+    public static Bitmap getFromCache(String url) {
         read.lock();
         try {
-            if (!cache.containsKey(id))
+            if (!cache.containsKey(url))
                 return null;
-            SoftReference<Bitmap> ref = cache.get(id);
+            SoftReference<Bitmap> ref = cache.get(url);
             return ref.get();
         } finally {
             read.unlock();

@@ -25,13 +25,13 @@ public class LoadPhotostreamTask extends AsyncTask<OAuth, Void, PhotoList> {
         OAuthToken token = arg0[0].getToken();
         Flickr f = FlickrHelper.getInstance().getFlickrAuthed(token.getOauthToken(), token.getOauthTokenSecret());
         Set<String> extras = new HashSet<String>();
-        extras.add("url_sq"); //$NON-NLS-1$
-        extras.add("url_l"); //$NON-NLS-1$
-        extras.add("views"); //$NON-NLS-1$
-        extras.add("geo"); //$NON-NLS-1$
+        extras.add("url_sq");
+        extras.add("url_l");
+        extras.add("views"); 
+        extras.add("geo"); 
         User user = arg0[0].getUser();
         try {
-            return f.getPeopleInterface().getPhotos(user.getId(), extras, 20, 1);
+            return f.getPeopleInterface().getPhotos(user.getId(), extras, 40, 1);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

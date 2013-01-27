@@ -68,7 +68,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         if (photo != null) {
             this.currentPhoto = photo;
             enableFullscreenMode(true);
-            ImageDownloadTask task = new ImageDownloadTask(imageViewFullScreen);
+            ImageDownloadTask task = new ImageDownloadTask(this, imageViewFullScreen);
             Drawable drawable = new DownloadedDrawable(task);
             imageViewFullScreen.setImageDrawable(drawable);
             task.execute(photo.getLargeUrl());
