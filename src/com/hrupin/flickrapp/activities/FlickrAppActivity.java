@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -42,8 +42,8 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     private GridView gridView;
     private FrameLayout frameLayoutFullScreenImageWrapper;
     private ImageView imageViewFullScreen;
-    private ImageButton imageButtonShowOnMap;
-    private ImageButton imageButtonDelete;
+    private Button buttonShowOnMap;
+    private Button buttonDelete;
     public GridThumbsAdapter adapter;
     private Photo currentPhoto;
 
@@ -57,10 +57,10 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         frameLayoutFullScreenImageWrapper = (FrameLayout) findViewById(R.id.frameLayoutFullScreenImageWrapper);
         imageViewFullScreen = (ImageView) findViewById(R.id.imageViewFullScreen);
         imageViewFullScreen.setOnClickListener(this);
-        imageButtonShowOnMap = (ImageButton) findViewById(R.id.imageButtonShowOnMap);
-        imageButtonShowOnMap.setOnClickListener(this);
-        imageButtonDelete = (ImageButton) findViewById(R.id.imageButtonDelete);
-        imageButtonDelete.setOnClickListener(this);
+        buttonShowOnMap = (Button) findViewById(R.id.buttonShowOnMap);
+        buttonShowOnMap.setOnClickListener(this);
+        buttonDelete = (Button) findViewById(R.id.buttonDelete);
+        buttonDelete.setOnClickListener(this);
         enableFullscreenMode(false);
     }
 
@@ -76,13 +76,13 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             if (photo.getGeoData() != null) {
                 GeoData geoData = photo.getGeoData();
                 Logger.i(TAG, "geoDate != null" + ", LAT:" + geoData.getLatitude() + ", LNG:" + geoData.getLongitude());
-                imageButtonShowOnMap.setVisibility(View.VISIBLE);
+                buttonShowOnMap.setVisibility(View.VISIBLE);
 
             } else {
-                imageButtonShowOnMap.setVisibility(View.GONE);
+                buttonShowOnMap.setVisibility(View.GONE);
                 Logger.i(TAG, "geoDate == null");
             }
-            imageButtonDelete.setTag(photo);
+            buttonDelete.setTag(photo);
         } else {
             this.currentPhoto = null;
             enableFullscreenMode(false);
@@ -96,14 +96,14 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
             frameLayoutFullScreenImageWrapper.setVisibility(View.VISIBLE);
             gridView.setEnabled(false);
             imageViewFullScreen.setClickable(true);
-            imageButtonShowOnMap.setVisibility(View.VISIBLE);
-            imageButtonDelete.setVisibility(View.VISIBLE);
+            buttonShowOnMap.setVisibility(View.VISIBLE);
+            buttonDelete.setVisibility(View.VISIBLE);
         } else {
             frameLayoutFullScreenImageWrapper.setVisibility(View.GONE);
             gridView.setEnabled(true);
             imageViewFullScreen.setClickable(false);
-            imageButtonShowOnMap.setVisibility(View.GONE);
-            imageButtonDelete.setVisibility(View.GONE);
+            buttonShowOnMap.setVisibility(View.GONE);
+            buttonDelete.setVisibility(View.GONE);
         }
     }
 
@@ -136,7 +136,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     }
 
     private void pleaseLoginFirst() {
-        Toast.makeText(this, "Please, login first", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.please_login_first), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -187,13 +187,14 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
                 enableFullscreenMode(false);
             }
         }
-        if (v.getId() == imageButtonShowOnMap.getId()) {
+        if (v.getId() == buttonShowOnMap.getId()) {
             if (currentPhoto != null) {
                 GeoData geoData = currentPhoto.getGeoData();
                 if (geoData != null) {
                     double latitude = geoData.getLatitude();
                     double longitude = geoData.getLongitude();
-                    String searchStr = "geo:0,0?q=" + latitude + "," + longitude + " (" + currentPhoto.getTitle() + ")";
+                    String title = (currentPhoto.getTitle().equals(""))?getString(R.string.photo):currentPhoto.getTitle();
+                    String searchStr = "geo:0,0?q=" + latitude + "," + longitude + " (" + title + ")";
                     Logger.i(TAG, searchStr);
                     Uri uri = Uri.parse(searchStr);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -201,7 +202,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
                 }
             }
         }
-        if (v.getId() == imageButtonDelete.getId()) {
+        if (v.getId() == buttonDelete.getId()) {
             if (currentPhoto != null) {
                 showDialog(DIALOG_WAIT);
                 OAuth oAuth = UserPreferences.getOAuthToken();
@@ -224,7 +225,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     protected Dialog onCreateDialog(int id) {
         if(id == DIALOG_WAIT){
             ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setMessage("Please, wait");
+            dialog.setMessage(getString(R.string.please_wait));
             return dialog;
         }
         return null;

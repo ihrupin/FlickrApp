@@ -4,5 +4,10 @@
     <string name="hello">Welcome to Flickr App.</string>
     <string name="app_name">FlickrApp</string>
     <string name="sign_in">Sign In</string>
+    <string name="please_wait">Please, wait</string>
+    <string name="please_login_first">Please, login first</string>
+    <string name="photo">Photo</string>
+    <string name="delete">Delete</string>
+    <string name="show_on_map">Map</string>
 
 </resources>
