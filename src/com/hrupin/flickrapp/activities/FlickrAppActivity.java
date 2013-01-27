@@ -144,6 +144,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
     private void load(OAuth oauth) {
         if (oauth != null) {
+            showDialog(DIALOG_WAIT);
             enableFullscreenMode(false);
             new LoadPhotostreamTask(new LoadListenerImpl()).execute(oauth);
         }
@@ -153,6 +154,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
         @Override
         public void onComplete(PhotoList result) {
+            dismissDialog(DIALOG_WAIT);
             adapter = new GridThumbsAdapter(FlickrAppActivity.this, result);
             gridView.setAdapter(adapter);
             gridView.setOnItemClickListener(FlickrAppActivity.this);
