@@ -49,17 +49,20 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     private Button buttonDelete;
     public GridThumbsAdapter adapter;
     private Photo currentPhoto;
+    private Activity activity = null;
     private Handler handlerPhotosDownload = new Handler() {
         public void handleMessage(Message message) {
-            Object list = message.obj;
-            if (message.arg1 == RESULT_OK && list != null) {
-                dismissDialog(DIALOG_WAIT);
-                PhotoList result = (PhotoList) list;
-                adapter = new GridThumbsAdapter(FlickrAppActivity.this, result);
-                gridView.setAdapter(adapter);
-                gridView.setOnItemClickListener(FlickrAppActivity.this);
-            } else {
-                Toast.makeText(FlickrAppActivity.this, getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+            if (activity != null) {
+                Object list = message.obj;
+                if (message.arg1 == RESULT_OK && list != null) {
+                    dismissDialog(DIALOG_WAIT);
+                    PhotoList result = (PhotoList) list;
+                    adapter = new GridThumbsAdapter(FlickrAppActivity.this, result);
+                    gridView.setAdapter(adapter);
+                    gridView.setOnItemClickListener(FlickrAppActivity.this);
+                } else {
+                    Toast.makeText(FlickrAppActivity.this, getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+                }
             }
 
         };
@@ -67,14 +70,15 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
 
     private Handler handlerPhotoDelete = new Handler() {
         public void handleMessage(Message message) {
-            if (message.arg1 == RESULT_OK) {
-                enableFullscreenMode(false);
-                gridView.setAdapter(null);
-                loadPhotostream();
-            } else {
-                Toast.makeText(FlickrAppActivity.this, getString(R.string.delete_failed), Toast.LENGTH_LONG).show();
+            if (activity != null) {
+                if (message.arg1 == RESULT_OK) {
+                    enableFullscreenMode(false);
+                    gridView.setAdapter(null);
+                    loadPhotostream();
+                } else {
+                    Toast.makeText(FlickrAppActivity.this, getString(R.string.delete_failed), Toast.LENGTH_LONG).show();
+                }
             }
-
         };
     };
 
@@ -83,7 +87,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
+        activity = this;
         gridView = (GridView) findViewById(R.id.gridViewThumbs);
         frameLayoutFullScreenImageWrapper = (FrameLayout) findViewById(R.id.frameLayoutFullScreenImageWrapper);
         imageViewFullScreen = (ImageView) findViewById(R.id.imageViewFullScreen);
@@ -142,6 +146,13 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     protected void onResume() {
         super.onResume();
         loadPhotostream();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        removeDialog(DIALOG_WAIT);
+        activity = null;
     }
 
     @Override
