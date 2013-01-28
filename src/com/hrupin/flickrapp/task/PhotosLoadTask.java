@@ -12,6 +12,7 @@ import com.gmail.yuyang226.flickr.people.User;
 import com.gmail.yuyang226.flickr.photos.PhotoList;
 import com.hrupin.flickrapp.FlickrHelper;
 /**this Task need for loading photostream from Flickr. Now this task not used*/
+@Deprecated
 public class PhotosLoadTask extends AsyncTask<OAuth, Void, PhotoList> {
 
     private LoadListener listener;

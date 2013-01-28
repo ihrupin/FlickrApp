@@ -8,6 +8,7 @@ import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.hrupin.flickrapp.FlickrHelper;
 import com.hrupin.flickrapp.development.Logger;
 /**this Task need for delete photo from Flickr. Now this task not used*/
+@Deprecated
 public class PhotoDeleteTask extends AsyncTask<OAuth, Void, Boolean> {
 
     private static final String TAG = PhotoDeleteTask.class.getSimpleName();
