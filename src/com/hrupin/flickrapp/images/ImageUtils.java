@@ -36,22 +36,21 @@ public final class ImageUtils {
         }
         return bitmap;
     }
-    
 
     private static void saveImageToExternalStorage(final Context context, final Bitmap bitmap, final String url) {
         new Thread(new Runnable() {
-            
+
             @Override
             public void run() {
                 String fileName = prepareFileName(url);
-                try{
+                try {
                     File file = Config.getFilePathOnExternalStorage(context, fileName);
                     FileOutputStream stream = new FileOutputStream(file);
                     bitmap.compress(CompressFormat.JPEG, 100, stream);
                     stream.flush();
                     stream.close();
                     Logger.i(TAG, "IMAGE saved to filename=" + fileName);
-                }catch (IOException e) {
+                } catch (IOException e) {
                     Logger.d(TAG, "I/O error while saving bitmap to " + fileName, e);
                 } catch (Exception e) {
                     Logger.d(TAG, "Error while saving bitmap to " + fileName, e);

@@ -18,7 +18,7 @@ public class Config {
         } else {
             root = new File(context.getDir(PHOTOS, Context.MODE_PRIVATE), PHOTOS);
         }
-        if(root != null){
+        if (root != null) {
             root.mkdirs();
         }
         String mFilePath = root.getPath() + "/" + fileName;

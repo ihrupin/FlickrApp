@@ -34,7 +34,7 @@ public class PhotoDeleteService extends IntentService {
 
         }
         if (oAuth != null & photoId != null) {
-            OAuthToken token = oAuth.getToken();           
+            OAuthToken token = oAuth.getToken();
             Flickr f = FlickrHelper.getInstance().getFlickrAuthed(token.getOauthToken(), token.getOauthTokenSecret());
             try {
                 f.getPhotosInterface().delete(photoId);

@@ -37,8 +37,6 @@ import com.hrupin.flickrapp.services.IntentKeys;
 import com.hrupin.flickrapp.services.PhotoDeleteService;
 import com.hrupin.flickrapp.services.PhotosLoadService;
 import com.hrupin.flickrapp.task.ImageDownloadTask;
-import com.hrupin.flickrapp.task.PhotoDeleteTask;
-import com.hrupin.flickrapp.task.PhotoDeleteTask.DeleteListener;
 
 public class FlickrAppActivity extends Activity implements OnItemClickListener, OnClickListener {
 

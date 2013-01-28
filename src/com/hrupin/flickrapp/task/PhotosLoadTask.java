@@ -11,7 +11,8 @@ import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.gmail.yuyang226.flickr.people.User;
 import com.gmail.yuyang226.flickr.photos.PhotoList;
 import com.hrupin.flickrapp.FlickrHelper;
-/**this Task need for loading photostream from Flickr. Now this task not used*/
+
+/** this Task need for loading photostream from Flickr. Now this task not used */
 @Deprecated
 public class PhotosLoadTask extends AsyncTask<OAuth, Void, PhotoList> {
 
@@ -28,8 +29,8 @@ public class PhotosLoadTask extends AsyncTask<OAuth, Void, PhotoList> {
         Set<String> extras = new HashSet<String>();
         extras.add("url_sq");
         extras.add("url_l");
-        extras.add("views"); 
-        extras.add("geo"); 
+        extras.add("views");
+        extras.add("geo");
         User user = arg0[0].getUser();
         try {
             return f.getPeopleInterface().getPhotos(user.getId(), extras, 40, 1);
