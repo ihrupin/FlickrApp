@@ -34,10 +34,10 @@ import com.hrupin.flickrapp.adapters.GridThumbsAdapter;
 import com.hrupin.flickrapp.development.Logger;
 import com.hrupin.flickrapp.images.ImageUtils.DownloadedDrawable;
 import com.hrupin.flickrapp.services.IntentKeys;
-import com.hrupin.flickrapp.services.LoadPhotosService;
-import com.hrupin.flickrapp.task.ImageDeleteTask;
-import com.hrupin.flickrapp.task.ImageDeleteTask.DeleteListener;
+import com.hrupin.flickrapp.services.PhotosLoadService;
 import com.hrupin.flickrapp.task.ImageDownloadTask;
+import com.hrupin.flickrapp.task.PhotoDeleteTask;
+import com.hrupin.flickrapp.task.PhotoDeleteTask.DeleteListener;
 
 public class FlickrAppActivity extends Activity implements OnItemClickListener, OnClickListener {
 
@@ -61,6 +61,18 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
                 gridView.setOnItemClickListener(FlickrAppActivity.this);
             } else {
                 Toast.makeText(FlickrAppActivity.this, getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+            }
+
+        };
+    };
+    
+    private Handler handlerPhotoDelete = new Handler() {
+        public void handleMessage(Message message) {
+            if (message.arg1 == RESULT_OK) {
+                enableFullscreenMode(false);
+                loadPhotostream();
+            } else {
+                Toast.makeText(FlickrAppActivity.this, getString(R.string.delete_failed), Toast.LENGTH_LONG).show();
             }
 
         };
@@ -129,8 +141,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
-
-        successLoginFlow();
+        loadPhotostream();
     }
 
     @Override
@@ -139,7 +150,7 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         gridView.setAdapter(null);
     }
 
-    private void successLoginFlow() {
+    private void loadPhotostream() {
         OAuth oAuth = UserPreferences.getOAuthToken();
         if (oAuth != null) {
             User user = oAuth.getUser();
@@ -165,9 +176,8 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
         if (oauth != null) {
             showDialog(DIALOG_WAIT);
             enableFullscreenMode(false);
-            // new LoadPhotostreamTask(new LoadListenerImpl()).execute(oauth);
             Messenger messenger = new Messenger(handlerPhotosDownload);
-            Intent intent = new Intent(this, LoadPhotosService.class);
+            Intent intent = new Intent(this, PhotosLoadService.class);
             intent.putExtra(IntentKeys.MESSENGER, messenger);
             intent.putExtra(IntentKeys.OAUTH, new Gson().toJson(oauth));
             startService(intent);
@@ -219,14 +229,12 @@ public class FlickrAppActivity extends Activity implements OnItemClickListener, 
                 showDialog(DIALOG_WAIT);
                 OAuth oAuth = UserPreferences.getOAuthToken();
                 if (oAuth != null) {
-                    new ImageDeleteTask(currentPhoto.getId(), new DeleteListener() {
-                        @Override
-                        public void onComplete() {
-                            gridView.setAdapter(null);
-                            successLoginFlow();
-                            dismissDialog(DIALOG_WAIT);
-                        }
-                    }).execute(oAuth);
+                    Messenger messenger = new Messenger(handlerPhotoDelete);
+                    Intent intent = new Intent(this, PhotosLoadService.class);
+                    intent.putExtra(IntentKeys.MESSENGER, messenger);
+                    intent.putExtra(IntentKeys.OAUTH, new Gson().toJson(oAuth));
+                    intent.putExtra(IntentKeys.PHOTO_ID, currentPhoto.getId());
+                    startService(intent);
                 }
             }
         }

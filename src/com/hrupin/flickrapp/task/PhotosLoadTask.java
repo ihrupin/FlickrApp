@@ -11,12 +11,12 @@ import com.gmail.yuyang226.flickr.oauth.OAuthToken;
 import com.gmail.yuyang226.flickr.people.User;
 import com.gmail.yuyang226.flickr.photos.PhotoList;
 import com.hrupin.flickrapp.FlickrHelper;
-
-public class LoadPhotostreamTask extends AsyncTask<OAuth, Void, PhotoList> {
+/**this Task need for loading photostream from Flickr. Now this task not used*/
+public class PhotosLoadTask extends AsyncTask<OAuth, Void, PhotoList> {
 
     private LoadListener listener;
 
-    public LoadPhotostreamTask(LoadListener listener) {
+    public PhotosLoadTask(LoadListener listener) {
         this.listener = listener;
     }
 

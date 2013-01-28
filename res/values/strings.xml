@@ -9,6 +9,7 @@
     <string name="photo">Photo</string>
     <string name="delete">Delete</string>
     <string name="show_on_map">Map</string>
-    <string name="download_failed">Download Failed</string>
+    <string name="download_failed">Photos download failed</string>
+    <string name="delete_failed">Photo delete failed</string>
 
 </resources>

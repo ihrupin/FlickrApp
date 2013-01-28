@@ -19,13 +19,13 @@ import com.google.gson.Gson;
 import com.hrupin.flickrapp.FlickrHelper;
 import com.hrupin.flickrapp.development.Logger;
 
-public class LoadPhotosService extends IntentService {
+public class PhotosLoadService extends IntentService {
 
-    private static final String TAG = LoadPhotosService.class.getSimpleName();
+    private static final String TAG = PhotosLoadService.class.getSimpleName();
     private int result = Activity.RESULT_CANCELED;
 
-    public LoadPhotosService() {
-        super("DownloadService");
+    public PhotosLoadService() {
+        super(TAG);
     }
 
     @Override
@@ -47,8 +47,8 @@ public class LoadPhotosService extends IntentService {
             extras.add("geo");
             User user = oAuth.getUser();
             try {
-                result = Activity.RESULT_OK;
                 list = f.getPeopleInterface().getPhotos(user.getId(), extras, 40, 1);
+                result = Activity.RESULT_OK;
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

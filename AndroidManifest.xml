@@ -47,7 +47,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         
-        <service android:name=".services.LoadPhotosService"></service>
+        <service android:name=".services.PhotosLoadService"></service>
+        <service android:name=".services.PhotoDeleteService"></service>
     </application>
 
 </manifest>
